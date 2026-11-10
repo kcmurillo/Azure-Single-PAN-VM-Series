@@ -14,10 +14,10 @@ The template deploys resources in a flat (non-nested) structure with `dependsOn`
 2. **Public IP** — Standard SKU, static allocation (conditional: `publicIPNewOrExisting == 'new'`)
 3. **NSG** — Management NSG with three rules: Allow source IP, Allow intra-VNET, Default-Deny
 4. **VNET** — Virtual network with 3 subnets (conditional: `vnetNewOrExisting == 'new'`)
-5. **NICs** — Three network interfaces:
+5. **NICs** — Three network interfaces (all with `defaultOutboundConnectivityEnabled: false`):
    - `eth0` (management): Dynamic IP, primary, no IP forwarding
-   - `eth1` (untrust): Dynamic IP + public IP, IP forwarding + accelerated networking enabled
-   - `eth2` (trust): Dynamic IP only, IP forwarding + accelerated networking enabled
+   - `eth1` (untrust): Static IP + public IP, IP forwarding + accelerated networking enabled
+   - `eth2` (trust): Static IP only, IP forwarding + accelerated networking enabled
 6. **Availability Set** — Aligned SKU (conditional: `availabilitySetName != 'None'`)
 7. **VM** — VM-Series from `paloaltonetworks/vmseries-flex/byol` Marketplace image
 
@@ -45,8 +45,9 @@ az deployment group create \
 - The NSG is named `DefaultNSG` (hardcoded in variables, not parameterized).
 - Availability is mutually exclusive: set `zone` for Availability Zone **or** `availabilitySetName` for Availability Set. Both default to `"None"` (disabled).
 - Bootstrap data is passed via `customData` parameter, base64-encoded, only when `bootstrap == 'yes'`.
-- API versions: Network `2020-11-01`, Compute `2022-03-01`, Deployment `2020-10-01`.
+- API versions: Network `2025-01-01`, Compute `2025-01-01`, Deployment `2022-09-01`.
+- **VM sizes**: Supports Dv2/Dv3/Dv4/Dv5/Dsv5/Fsv2 families. Default is `Standard_D3_v2` (Dv2 series is retiring; prefer Dv5/Dsv5 for new deployments).
 
 ## Key Differences from Sibling Panorama Templates
 
-The sibling repo (`Claude-Dev-Azure-ARM/`) contains Panorama templates that use **nested deployments** with `global_`/resource-specific variable prefixes. This VM-Series template uses a **flat resource structure** with simpler variable naming and no nested deployments. The Panorama templates also use newer API versions (2023-09-01).
+The sibling repo (`Claude-Dev-Azure-ARM/`) contains Panorama templates that use **nested deployments** with `global_`/resource-specific variable prefixes. This VM-Series template uses a **flat resource structure** with simpler variable naming and no nested deployments.

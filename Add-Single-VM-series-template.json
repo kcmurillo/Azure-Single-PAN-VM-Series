@@ -72,7 +72,13 @@
         "Standard_D8_v4",
         "Standard_D16_v4",
         "Standard_D8s_v4",
-        "Standard_D16s_v4"
+        "Standard_D16s_v4",
+        "Standard_D4_v5",
+        "Standard_D8_v5",
+        "Standard_D16_v5",
+        "Standard_D4s_v5",
+        "Standard_D8s_v5",
+        "Standard_D16s_v5"
       ],
       "metadata": {
         "description": "Azure VM size for VM-Series"
@@ -354,7 +360,7 @@
     {
       "condition": "[equals(parameters('publicIPNewOrExisting'), 'new')]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "2023-09-01",
+      "apiVersion": "2025-01-01",
       "name": "[parameters('publicIPAddressName')]",
       "location": "[parameters('location')]",
       "tags": "[parameters('resourceTags')]",
@@ -371,7 +377,7 @@
     },
     {
       "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2023-09-01",
+      "apiVersion": "2025-01-01",
       "name": "[variables('nsgName')]",
       "location": "[parameters('location')]",
       "tags": "[parameters('resourceTags')]",
@@ -425,7 +431,7 @@
     {
       "condition": "[equals(parameters('vnetNewOrExisting'), 'new')]",
       "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2023-09-01",
+      "apiVersion": "2025-01-01",
       "name": "[parameters('virtualNetworkName')]",
       "location": "[parameters('location')]",
       "tags": "[parameters('resourceTags')]",
@@ -443,11 +449,12 @@
     },
     {
       "type": "Microsoft.Network/networkInterfaces",
-      "apiVersion": "2023-09-01",
+      "apiVersion": "2025-01-01",
       "name": "[format('{0}0', variables('nicName'))]",
       "location": "[parameters('location')]",
       "tags": "[parameters('resourceTags')]",
       "properties": {
+        "defaultOutboundConnectivityEnabled": false,
         "networkSecurityGroup": {
           "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
         },
@@ -470,11 +477,12 @@
     },
     {
       "type": "Microsoft.Network/networkInterfaces",
-      "apiVersion": "2023-09-01",
+      "apiVersion": "2025-01-01",
       "name": "[format('{0}1', variables('nicName'))]",
       "location": "[parameters('location')]",
       "tags": "[parameters('resourceTags')]",
       "properties": {
+        "defaultOutboundConnectivityEnabled": false,
         "enableIPForwarding": true,
         "enableAcceleratedNetworking": true,
         "ipConfigurations": [
@@ -498,11 +506,12 @@
     },
     {
       "type": "Microsoft.Network/networkInterfaces",
-      "apiVersion": "2023-09-01",
+      "apiVersion": "2025-01-01",
       "name": "[format('{0}2', variables('nicName'))]",
       "location": "[parameters('location')]",
       "tags": "[parameters('resourceTags')]",
       "properties": {
+        "defaultOutboundConnectivityEnabled": false,
         "enableIPForwarding": true,
         "enableAcceleratedNetworking": true,
         "ipConfigurations": [
@@ -525,7 +534,7 @@
     {
       "condition": "[not(equals(parameters('availabilitySetName'), 'None'))]",
       "type": "Microsoft.Compute/availabilitySets",
-      "apiVersion": "2023-09-01",
+      "apiVersion": "2025-01-01",
       "name": "[parameters('availabilitySetName')]",
       "location": "[parameters('location')]",
       "tags": "[parameters('resourceTags')]",
@@ -542,7 +551,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2023-09-01",
+      "apiVersion": "2025-01-01",
       "name": "[parameters('vmName')]",
       "location": "[parameters('location')]",
       "tags": "[parameters('resourceTags')]",
